@@ -40,19 +40,6 @@ const Home = () => {
   // Initialize intersection observer for scroll animations
   useMultiIntersectionObserver({ threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (heroRef.current) {
-        const scrolled = window.scrollY;
-        heroRef.current.style.transform = `translateY(${scrolled * 0.5}px)`;
-        heroRef.current.style.opacity = `${1 - scrolled / 800}`;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -185,9 +172,9 @@ const Home = () => {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section id="hero" className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-secondary via-background to-background">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 animate-pulse" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10" />
         
-        <div ref={heroRef} className="relative z-10 text-center px-6 max-w-5xl mx-auto parallax-slow">
+        <div ref={heroRef} className="relative z-10 text-center px-6 max-w-5xl mx-auto">
           <h1 className="font-display text-6xl md:text-8xl lg:text-9xl font-bold mb-6 tracking-tight">
             {t('hero.title').split('. ').map((word, index) => (
               <span
@@ -212,7 +199,7 @@ const Home = () => {
           </a>
         </div>
 
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce">
+        <div className="absolute bottom-12 left-0 right-0 flex justify-center animate-bounce">
           <div className="flex flex-col items-center text-muted-foreground">
             <span className="text-sm mb-2">{t('hero.scroll')}</span>
             <ChevronDown size={24} />
