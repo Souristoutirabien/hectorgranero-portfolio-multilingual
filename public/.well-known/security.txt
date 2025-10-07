@@ -1,0 +1,10 @@
+Contact: mailto:security@hectorgranero.com
+Expires: 2026-12-31T23:59:59.000Z
+Preferred-Languages: en, fr, es
+Canonical: https://hectorgranero.com/.well-known/security.txt
+Policy: https://hectorgranero.com/security-policy
+Acknowledgments: https://hectorgranero.com/security-acknowledgments
+
+# Security contact information for Héctor Granero Portfolio
+# This file complies with RFC 9116
+# If you discover a security vulnerability, please report it responsibly.
