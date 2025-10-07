@@ -6,7 +6,7 @@ import { useMultiIntersectionObserver } from '@/hooks/use-intersection-observer'
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -162,11 +162,23 @@ const Home = () => {
     },
   ];
 
-  const skills = [
-    { category: t('cv.skills.ux.title'), level: 95 },
-    { category: t('cv.skills.systems.title'), level: 90 },
-    { category: t('cv.skills.research.title'), level: 85 },
-    { category: t('cv.skills.tools.title'), level: 90 }
+  const skillCategories = [
+    { 
+      title: t('cv.skills.ux.title'), 
+      items: t('cv.skills.ux.items').split(',').map(item => item.trim())
+    },
+    { 
+      title: t('cv.skills.systems.title'), 
+      items: t('cv.skills.systems.items').split(',').map(item => item.trim())
+    },
+    { 
+      title: t('cv.skills.research.title'), 
+      items: t('cv.skills.research.items').split(',').map(item => item.trim())
+    },
+    { 
+      title: t('cv.skills.tools.title'), 
+      items: t('cv.skills.tools.items').split(',').map(item => item.trim())
+    },
   ];
 
   return (
@@ -241,14 +253,25 @@ const Home = () => {
           {/* Skills Grid */}
           <div className="mb-12" data-animate>
             <h3 className="font-display text-3xl font-bold mb-8 text-center">{t('cv.skills.title')}</h3>
-            <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-              {skills.map((skill, index) => (
-                <div key={index} className="space-y-2" data-animate>
-                  <div className="flex items-baseline justify-between">
-                    <span className="font-semibold">{skill.category}</span>
-                    <span className="text-sm text-muted-foreground">{skill.level}%</span>
+            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              {skillCategories.map((category, index) => (
+                <div 
+                  key={index} 
+                  className="p-6 rounded-lg border border-border bg-card/50 hover:border-primary/50 transition-colors"
+                  data-animate
+                >
+                  <h4 className="font-semibold text-lg mb-4">{category.title}</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {category.items.map((item, itemIndex) => (
+                      <Badge 
+                        key={itemIndex} 
+                        variant="outline"
+                        className="text-sm"
+                      >
+                        {item}
+                      </Badge>
+                    ))}
                   </div>
-                  <Progress value={skill.level} className="h-2" />
                 </div>
               ))}
             </div>
