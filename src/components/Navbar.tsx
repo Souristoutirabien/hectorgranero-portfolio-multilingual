@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useLanguage, Language } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,8 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { language, setLanguage, t } = useLanguage();
   const location = useLocation();
+  const navigate = useNavigate();
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,12 +20,33 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navLinks = [
-    { path: '/projects', label: t('nav.work') },
-    { path: '/about', label: t('nav.about') },
-    { path: '/services', label: t('nav.services') },
-    { path: '/contact', label: t('nav.contact') },
-  ];
+  const navLinks = isHomePage 
+    ? [
+        { path: '#about', label: t('nav.about'), isAnchor: true },
+        { path: '#projects', label: t('nav.work'), isAnchor: true },
+        { path: '#services', label: t('nav.services'), isAnchor: true },
+        { path: '#contact', label: t('nav.contact'), isAnchor: true },
+      ]
+    : [
+        { path: '/', label: t('nav.home'), isAnchor: false },
+      ];
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string, isAnchor: boolean) => {
+    if (isAnchor) {
+      e.preventDefault();
+      if (!isHomePage) {
+        navigate('/');
+        setTimeout(() => {
+          const element = document.querySelector(path);
+          element?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      } else {
+        const element = document.querySelector(path);
+        element?.scrollIntoView({ behavior: 'smooth' });
+      }
+      setIsMobileMenuOpen(false);
+    }
+  };
 
   const languages: { code: Language; label: string }[] = [
     { code: 'en', label: 'EN' },
@@ -47,15 +70,26 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`text-sm font-medium tracking-wide transition-colors hover:text-primary ${
-                  location.pathname === link.path ? 'text-primary' : 'text-foreground'
-                }`}
-              >
-                {link.label}
-              </Link>
+              link.isAnchor ? (
+                <a
+                  key={link.path}
+                  href={link.path}
+                  onClick={(e) => handleNavClick(e, link.path, true)}
+                  className="text-sm font-medium tracking-wide transition-colors hover:text-primary text-foreground"
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`text-sm font-medium tracking-wide transition-colors hover:text-primary ${
+                    location.pathname === link.path ? 'text-primary' : 'text-foreground'
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              )
             ))}
           </div>
 
@@ -90,16 +124,27 @@ const Navbar = () => {
           <div className="md:hidden absolute top-full left-0 right-0 bg-background border-t border-border shadow-lg">
             <div className="flex flex-col space-y-4 px-6 py-6">
               {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`text-base font-medium ${
-                    location.pathname === link.path ? 'text-primary' : 'text-foreground'
-                  }`}
-                >
-                  {link.label}
-                </Link>
+                link.isAnchor ? (
+                  <a
+                    key={link.path}
+                    href={link.path}
+                    onClick={(e) => handleNavClick(e, link.path, true)}
+                    className="text-base font-medium text-foreground"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`text-base font-medium ${
+                      location.pathname === link.path ? 'text-primary' : 'text-foreground'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                )
               ))}
               <div className="flex items-center space-x-2 pt-4 border-t border-border">
                 {languages.map((lang) => (
