@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useLanguage, Language } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -93,21 +94,24 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Language Toggle */}
-          <div className="hidden md:flex items-center space-x-2">
-            {languages.map((lang) => (
-              <button
-                key={lang.code}
-                onClick={() => setLanguage(lang.code)}
-                className={`text-xs font-medium px-2 py-1 rounded transition-colors ${
-                  language === lang.code
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                {lang.label}
-              </button>
-            ))}
+          {/* Language & Theme Toggle */}
+          <div className="hidden md:flex items-center space-x-4">
+            <ThemeToggle />
+            <div className="flex items-center space-x-2">
+              {languages.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => setLanguage(lang.code)}
+                  className={`text-xs font-medium px-2 py-1 rounded transition-colors ${
+                    language === lang.code
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {lang.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
@@ -146,23 +150,26 @@ const Navbar = () => {
                   </Link>
                 )
               ))}
-              <div className="flex items-center space-x-2 pt-4 border-t border-border">
-                {languages.map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() => {
-                      setLanguage(lang.code);
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className={`text-sm font-medium px-3 py-1 rounded ${
-                      language === lang.code
-                        ? 'bg-primary text-primary-foreground'
-                        : 'text-muted-foreground'
-                    }`}
-                  >
-                    {lang.label}
-                  </button>
-                ))}
+              <div className="flex flex-col space-y-4 pt-4 border-t border-border">
+                <ThemeToggle />
+                <div className="flex items-center space-x-2">
+                  {languages.map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => {
+                        setLanguage(lang.code);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className={`text-sm font-medium px-3 py-1 rounded ${
+                        language === lang.code
+                          ? 'bg-primary text-primary-foreground'
+                          : 'text-muted-foreground'
+                      }`}
+                    >
+                      {lang.label}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
