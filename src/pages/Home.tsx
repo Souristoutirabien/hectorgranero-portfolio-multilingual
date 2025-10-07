@@ -30,6 +30,13 @@ const contactSchema = z.object({
 const Home = () => {
   const { t } = useLanguage();
   const heroRef = useRef<HTMLDivElement>(null);
+  
+  // Refs for Apple-style scroll animations (placeholders)
+  const aboutParallaxRef = useRef<HTMLDivElement>(null);
+  const projectsParallaxRef = useRef<HTMLDivElement>(null);
+  const servicesParallaxRef = useRef<HTMLDivElement>(null);
+  const contactParallaxRef = useRef<HTMLDivElement>(null);
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -39,6 +46,21 @@ const Home = () => {
 
   // Initialize intersection observer for scroll animations
   useMultiIntersectionObserver({ threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+  // Hero parallax effect (restored with subtle factor)
+  useEffect(() => {
+    const handleScroll = () => {
+      if (heroRef.current) {
+        const scrolled = window.scrollY;
+        // Subtle parallax effect (0.3 factor instead of 0.5)
+        heroRef.current.style.transform = `translateY(${scrolled * 0.3}px)`;
+        heroRef.current.style.opacity = `${1 - scrolled / 1000}`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -209,7 +231,26 @@ const Home = () => {
 
       {/* About Section */}
       <section id="about" className="relative min-h-[100dvh] py-20 md:py-32 bg-gradient-to-b from-background to-muted">
-        <div className="container mx-auto px-6 max-w-5xl">
+        <div ref={aboutParallaxRef} className="container mx-auto px-6 max-w-5xl">
+          {/* 
+            APPLE-STYLE SCROLL ANIMATION PLACEHOLDER
+            -------------------------------------------
+            Efecto sugerido: Parallax de texto con fade + zoom suave del título
+            
+            Scroll range: Cuando la sección entra en viewport (0-100%)
+            Transform: 
+              - translateY: desde 50px hasta 0px
+              - scale: desde 0.95 hasta 1
+              - opacity: desde 0 hasta 1
+            
+            Inspiración: apple.com/mac-studio (sección hero con zoom)
+            
+            Implementación recomendada:
+            - Calcular scroll progress: (scrollY - sectionTop) / sectionHeight
+            - Aplicar transforms progresivos al título y descripción
+            - Usar easing: cubic-bezier(0.4, 0, 0.2, 1)
+            - Performance: usar transform y opacity (GPU accelerated)
+          */}
           <h2 className="font-display text-5xl md:text-7xl font-bold mb-12 text-center" data-animate>
             {t('cv.header.name')}
           </h2>
@@ -284,7 +325,28 @@ const Home = () => {
 
       {/* Featured Projects Section */}
       <section id="projects" className="relative min-h-[100dvh] py-20 md:py-32 bg-gradient-to-b from-muted to-background">
-        <div className="container mx-auto px-6">
+        <div ref={projectsParallaxRef} className="container mx-auto px-6">
+          {/* 
+            APPLE-STYLE SCROLL ANIMATION PLACEHOLDER
+            -------------------------------------------
+            Efecto sugerido: Cards con efecto de profundidad 3D y stagger reveal
+            
+            Scroll range: Entrada progresiva cuando la sección alcanza 60% viewport
+            Transform por card (con delay incremental):
+              - perspective: 1000px
+              - rotateX: desde 15deg hasta 0deg
+              - translateY: desde 100px hasta 0px
+              - opacity: desde 0 hasta 1
+              - Stagger delay: 150ms entre cards
+            
+            Inspiración: apple.com/iphone-15-pro (sección de features con cards)
+            
+            Implementación recomendada:
+            - Aplicar transform 3D a cada card con perspective parent
+            - Calcular delay basado en índice: index * 0.15s
+            - Usar IntersectionObserver para trigger initial
+            - Considerar reducedMotion preference
+          */}
           <h2 className="font-display text-5xl md:text-7xl font-bold mb-20 text-center" data-animate>
             {t('projects.title')}
           </h2>
@@ -329,7 +391,28 @@ const Home = () => {
 
       {/* Services Section */}
       <section id="services" className="relative min-h-[100dvh] py-20 md:py-32 bg-gradient-to-b from-background to-muted">
-        <div className="container mx-auto px-6">
+        <div ref={servicesParallaxRef} className="container mx-auto px-6">
+          {/* 
+            APPLE-STYLE SCROLL ANIMATION PLACEHOLDER
+            -------------------------------------------
+            Efecto sugerido: Icons con reveal secuencial y "morph" effect
+            
+            Scroll range: Reveal progresivo de iconos (0-300px de scroll en sección)
+            Transform por icono:
+              - scale: desde 0.3 hasta 1
+              - rotate: desde -180deg hasta 0deg
+              - opacity: desde 0 hasta 1
+              - Blur: desde 10px hasta 0px (filter: blur)
+              - Delay secuencial: 100ms entre iconos
+            
+            Inspiración: apple.com/airpods-pro (sección de features con iconos)
+            
+            Implementación recomendada:
+            - Wrap cada icono en un container con transform-gpu
+            - Calcular progress individual por icono
+            - Aplicar will-change: transform para performance
+            - Combinar con color transition (muted -> primary)
+          */}
           <h2 className="font-display text-5xl md:text-7xl font-bold mb-20 text-center" data-animate>
             {t('services.title')}
           </h2>
@@ -359,7 +442,32 @@ const Home = () => {
       <section id="contact" className="relative min-h-[100dvh] py-20 md:py-32 bg-gradient-to-b from-muted to-background">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 animate-pulse pointer-events-none" />
         
-        <div className="container mx-auto px-6 relative z-10">
+        <div ref={contactParallaxRef} className="container mx-auto px-6 relative z-10">
+          {/* 
+            APPLE-STYLE SCROLL ANIMATION PLACEHOLDER
+            -------------------------------------------
+            Efecto sugerido: Form con slide-in suave y blur-to-focus
+            
+            Scroll range: Cuando la sección entra (50% viewport)
+            Transform del form:
+              - translateY: desde 80px hasta 0px
+              - scale: desde 0.98 hasta 1
+              - opacity: desde 0 hasta 1
+              - backdrop-filter: blur desde 20px hasta 0px
+            
+            Animación de inputs (secuencial):
+              - Cada input aparece con delay: 80ms incremental
+              - translateX: desde -30px hasta 0px
+              - opacity: desde 0 hasta 1
+            
+            Inspiración: apple.com/contact (form de contacto con smooth reveal)
+            
+            Implementación recomendada:
+            - Aplicar backdrop-filter al contenedor del form
+            - Animar border-color de inputs (muted -> primary)
+            - Usar cubic-bezier(0.16, 1, 0.3, 1) para "spring" effect
+            - Considerar touch/hover states con micro-interactions
+          */}
           <div className="text-center mb-16" data-animate>
             <h2 className="font-display text-5xl md:text-7xl font-bold mb-6">
               {t('contact.title')}
